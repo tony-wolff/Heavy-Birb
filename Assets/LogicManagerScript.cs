@@ -21,14 +21,14 @@ public class LogicManagerScript : MonoBehaviour
     [ContextMenu("Increase Score")]
     public void addScore(int scoreToAdd)
     {
-        if (SceneScript.isLegacy)
-            Debug.Log("it works !!!");
         //If game over, score is not updated
         if (!gameOverScreen.activeSelf)
         {
             playerScore += scoreToAdd;
             scoreText.text = playerScore.ToString();
             points_audio.Play();
+            if (!SceneScript.isLegacy)
+                birb_script.IncreaseBirbSize();
         }
 
     }

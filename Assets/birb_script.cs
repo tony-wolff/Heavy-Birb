@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class birb_script : MonoBehaviour
 {
@@ -12,13 +13,24 @@ public class birb_script : MonoBehaviour
     private Camera cam;
     public SpriteRenderer mySprite;
     private Animator m_Animator;
+    private double gravityLegacy = 8.63;
     // Start is called before the first frame update
     void Start()
     {
+        if(!SceneScript.isLegacy)
+        {
+            myRigidBody.gravityScale = 4;
+            DecreaseBirbSize();
+        }
         cam = Camera.main;
         m_Animator = gameObject.GetComponentInChildren<Animator>();
         //Convert sprite size to screen points
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
+    }
+
+    private void DecreaseBirbSize()
+    {
+        transform.localScale /= 2;
     }
 
     //Game Over condition
@@ -29,6 +41,11 @@ public class birb_script : MonoBehaviour
         if(top.y < 0 || bottom.y > 1)
             return true;
         return false;
+    }
+
+    internal static void IncreaseBirbSize()
+    {
+        
     }
 
     // Update is called once per frames
