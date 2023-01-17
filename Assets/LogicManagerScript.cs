@@ -11,11 +11,13 @@ public class LogicManagerScript : MonoBehaviour
     public Text highScoreText;
     public GameObject gameOverScreen;
     public AudioSource points_audio;
+    birb_script birb_Script;
 
     private void Start()
     {
         int highScore = PlayerPrefs.GetInt("high_score");
         highScoreText.text = "High Score: " + highScore.ToString();
+        birb_Script = GameObject.FindGameObjectWithTag("birb").GetComponent<birb_script>();
     }
 
     [ContextMenu("Increase Score")]
@@ -28,7 +30,7 @@ public class LogicManagerScript : MonoBehaviour
             scoreText.text = playerScore.ToString();
             points_audio.Play();
             if (!SceneScript.isLegacy)
-                birb_script.IncreaseBirbSize();
+                birb_Script.IncreaseBirbSize();
         }
 
     }
