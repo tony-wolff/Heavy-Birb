@@ -21,6 +21,8 @@ public class LogicManagerScript : MonoBehaviour
     [ContextMenu("Increase Score")]
     public void addScore(int scoreToAdd)
     {
+        if (SceneScript.isLegacy)
+            Debug.Log("it works !!!");
         //If game over, score is not updated
         if (!gameOverScreen.activeSelf)
         {
