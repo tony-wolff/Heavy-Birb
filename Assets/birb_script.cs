@@ -66,7 +66,10 @@ public class birb_script : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        logic.gameOver();
-        birbAlive = false;
+        if (!collision.gameObject.name.Equals("Cherry"))
+        {
+            logic.gameOver();
+            birbAlive = false;
+        }
     }
 }

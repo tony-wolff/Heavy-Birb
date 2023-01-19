@@ -5991,6 +5991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pipe: {fileID: 4077471166844128918, guid: d80d59a87b3635b4db4a24c633f111d8, type: 3}
+  pipeCherry: {fileID: 4077471166844128918, guid: 5628391be7461574fb68fd9e226fab75, type: 3}
   spawnRate: 3
   heightOffset: 10
 --- !u!4 &1953927986

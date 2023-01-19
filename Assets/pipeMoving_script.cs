@@ -20,7 +20,6 @@ public class pipeMoving_script : MonoBehaviour
         {
             Debug.Log("Pipe deleted");
             Destroy(gameObject);
-
         }
     }
 }
