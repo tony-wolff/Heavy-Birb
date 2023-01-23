@@ -26,7 +26,6 @@ public class PipeSpawnerScript : MonoBehaviour
             SpawnPipe();
             timer = 0;
         }
-
     }
 
     void SpawnPipe()
@@ -34,6 +33,7 @@ public class PipeSpawnerScript : MonoBehaviour
         float lowestPoint = transform.position.y - heightOffset;
         float highestpoint = transform.position.y + heightOffset;
         Vector3 randomHeight = new Vector3(transform.position.x, Random.Range(lowestPoint, highestpoint), 0);
+
         if (SceneScript.isLegacy)
             Instantiate(pipe, randomHeight, transform.rotation);
         //If game mode is Heavy Birb, 1/3 of chance to have a cherry besides the pipes

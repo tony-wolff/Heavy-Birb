@@ -40,6 +40,11 @@ public class LogicManagerScript : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void loadTitleScreen()
+    {
+        SceneManager.LoadScene("TitleScreenScene");
+    }
+
     public void gameOver()
     {
         if(playerScore > PlayerPrefs.GetInt("high_score"))

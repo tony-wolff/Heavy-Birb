@@ -13,6 +13,7 @@ public class birb_script : MonoBehaviour
     private Camera cam;
     public SpriteRenderer mySprite;
     private Animator m_Animator;
+    private float maxSize = 1.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,9 +44,12 @@ public class birb_script : MonoBehaviour
 
     public void IncreaseBirbSize()
     {
-        Vector3 levelOfFat = new Vector3(0.05f, 0.05f, 0);
-        transform.localScale += levelOfFat;
-        myRigidBody.gravityScale += 0.05f;
+        if (transform.localScale.x < maxSize)
+        {
+            Vector3 fatnessToAdd = new Vector3(0.05f, 0.05f, 0);
+            transform.localScale += fatnessToAdd;
+            myRigidBody.gravityScale += 0.05f;
+        }
     }
 
     // Update is called once per frames
@@ -59,6 +63,7 @@ public class birb_script : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && birbAlive)
         {
+            Debug.Log(transform.localScale);
             myRigidBody.velocity = Vector2.up * flapStrength;
             m_Animator.SetTrigger("Flapping");
         }
@@ -66,10 +71,7 @@ public class birb_script : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collision.gameObject.name.Equals("Cherry"))
-        {
-            logic.gameOver();
-            birbAlive = false;
-        }
+        logic.gameOver();
+        birbAlive = false;
     }
 }
