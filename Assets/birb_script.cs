@@ -63,7 +63,6 @@ public class birb_script : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && birbAlive)
         {
-            Debug.Log(transform.localScale);
             myRigidBody.velocity = Vector2.up * flapStrength;
             m_Animator.SetTrigger("Flapping");
         }
@@ -71,7 +70,7 @@ public class birb_script : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        logic.gameOver();
-        birbAlive = false;
+        //logic.gameOver();
+        //birbAlive = false;
     }
 }

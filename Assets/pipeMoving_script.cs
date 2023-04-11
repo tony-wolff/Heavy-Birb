@@ -7,11 +7,15 @@ public class pipeMoving_script : MonoBehaviour
     public float moveSpeedX = 5;
     public float moveSpeedY = 5;
     public float deadZone = -45;
-    float heightOffset = 10;
-    bool up;
-    Camera cam;
+    protected bool up;
+    protected Camera cam;
     // Start is called before the first frame update
     void Start()
+    {
+        Setup();
+    }
+
+    protected void Setup()
     {
         cam = Camera.main;
         if (Random.value > 0.5)
@@ -20,18 +24,18 @@ public class pipeMoving_script : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
+        //Move pipes towards left
         transform.position = transform.position + (Vector3.left * moveSpeedX) * Time.deltaTime;
-        MovePipe();
+        MovePipeUpDown();
         if (transform.position.x < deadZone)
         {
-            Debug.Log("Pipe deleted");
             Destroy(gameObject);
         }
     }
 
-    void MovePipe()
+    void MovePipeUpDown()
     {
         if (cam.WorldToViewportPoint(transform.position).y <= 0)
             up = true;
