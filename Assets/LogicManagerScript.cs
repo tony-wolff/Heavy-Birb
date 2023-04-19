@@ -12,12 +12,27 @@ public class LogicManagerScript : MonoBehaviour
     public GameObject gameOverScreen;
     public AudioSource points_audio;
     birb_script birb_Script;
-
+    bool pauseBeforeStart = true;
     private void Start()
     {
         int highScore = PlayerPrefs.GetInt("high_score");
         highScoreText.text = "High Score: " + highScore.ToString();
         birb_Script = GameObject.FindGameObjectWithTag("birb").GetComponent<birb_script>();
+        Time.timeScale = 0;
+    }
+
+    private void Update()
+    {
+        if (pauseBeforeStart)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                pauseBeforeStart = false;
+                Time.timeScale = 1;
+                GameObject.FindGameObjectWithTag("spacebarimage").SetActive(false);
+            }
+        }
+
     }
 
     [ContextMenu("Increase Score")]

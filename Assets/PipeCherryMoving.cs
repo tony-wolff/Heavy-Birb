@@ -28,7 +28,7 @@ public class PipeCherryMoving : pipeMoving_script
         float downOffset = transform.position.y - heightOffset;
         transform.GetChild(2).gameObject.SetActive(true);
         
-        Vector3 cherryPos = new Vector3(Random.Range(right+1, widthOffset), Random.Range(downOffset, upOffset), 0);
+        Vector3 cherryPos = new Vector3(Random.Range(right+1, right+widthOffset), Random.Range(downOffset, upOffset), 0);
         transform.GetChild(2).gameObject.transform.position = cherryPos;
     }
 
