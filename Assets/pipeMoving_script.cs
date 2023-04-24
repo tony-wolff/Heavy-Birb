@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class pipeMoving_script : MonoBehaviour
 {
-    public float moveSpeedX = 5;
-    public float moveSpeedY = 5;
+    public static float moveSpeedX = 5;
+    public static float moveSpeedY = 5;
     public float deadZone = -45;
     protected bool up;
     protected Camera cam;
@@ -21,6 +21,12 @@ public class pipeMoving_script : MonoBehaviour
         if (Random.value > 0.5)
             up = true;
         else up = false;
+    }
+
+    private void Reset()
+    {
+        moveSpeedX = 5;
+        moveSpeedY = 5;
     }
 
     // Update is called once per frame

@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicManagerScript : MonoBehaviour
 {
-    public int playerScore = 0;
+    private int playerScore = 10;
+    private bool increaseDifficulty = false;
     public Text scoreText;
     public Text highScoreText;
     public GameObject gameOverScreen;
@@ -32,6 +33,10 @@ public class LogicManagerScript : MonoBehaviour
                 GameObject.FindGameObjectWithTag("spacebarimage").SetActive(false);
             }
         }
+        else
+        {
+            AdjustDifficulty();
+        }
 
     }
 
@@ -50,8 +55,14 @@ public class LogicManagerScript : MonoBehaviour
 
     }
 
+    public int getScore()
+    {
+        return playerScore;
+    }
+
     public void restartGame()
     {
+        GameObject.FindGameObjectWithTag("spawner").GetComponent<PipeSpawnerScript>().Reset();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -68,5 +79,22 @@ public class LogicManagerScript : MonoBehaviour
             highScoreText.text = "High Score: " + playerScore;
         }
         gameOverScreen.SetActive(true);
+    }
+
+
+    void AdjustDifficulty()
+    {
+        if(getScore() == 10 || getScore() == 20 || getScore() == 30 || getScore() == 40)
+            increaseDifficulty = true;
+    }
+
+    public void setDifficulty(bool d)
+    {
+        increaseDifficulty = d;
+    }
+
+    public bool IncreaseDifficultyOn()
+    {
+        return increaseDifficulty;
     }
 }
