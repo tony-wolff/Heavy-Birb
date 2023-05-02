@@ -7,7 +7,13 @@ using System;
 public class birb_script : MonoBehaviour
 {
     public Rigidbody2D myRigidBody;
+    public GameObject echo;
+    List<GameObject> echoes;
     public float flapStrength;
+    public float dashStrength;
+    public float delayDash;
+    float timer;
+    float elapsedTime;
     public LogicManagerScript logic;
     public bool birbAlive = true;
     private Camera cam;
@@ -25,6 +31,8 @@ public class birb_script : MonoBehaviour
         cam = Camera.main;
         m_Animator = gameObject.GetComponentInChildren<Animator>();
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
+        timer = delayDash;
+        echoes = new List<GameObject>();
     }
 
     private void DecreaseBirbSize()
@@ -61,10 +69,41 @@ public class birb_script : MonoBehaviour
             birbAlive = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && birbAlive)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)) && birbAlive)
         {
             myRigidBody.velocity = Vector2.up * flapStrength;
             m_Animator.SetTrigger("Flapping");
+        }
+
+        if(Input.GetKeyDown(KeyCode.RightArrow) && birbAlive && timer >= delayDash)
+        {
+            elapsedTime = 0;
+            StartCoroutine(Echo());
+            myRigidBody.velocity = Vector2.right * dashStrength;
+            timer = 0;
+        }
+        timer += Time.deltaTime;
+        elapsedTime += Time.deltaTime;
+    }
+
+    public IEnumerator Echo()
+    {
+        while (true)
+        {
+            GameObject e = Instantiate(echo, transform.position, transform.rotation);
+            e.transform.localScale = transform.localScale;
+            echoes.Add(e);
+            Debug.Log(elapsedTime);
+            yield return new WaitForSeconds(0.05f);
+            if (elapsedTime >= 0.5f)
+            {
+                foreach(GameObject ec in echoes)
+                {
+                    Destroy(ec);
+                }
+                echoes.Clear();
+                yield break;
+            }
         }
     }
 

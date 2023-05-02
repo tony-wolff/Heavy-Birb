@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LogicManagerScript : MonoBehaviour
 {
-    private int playerScore = 10;
+    private int playerScore = 40;
     private bool increaseDifficulty = false;
     public Text scoreText;
     public Text highScoreText;
@@ -14,8 +14,10 @@ public class LogicManagerScript : MonoBehaviour
     public AudioSource points_audio;
     birb_script birb_Script;
     bool pauseBeforeStart = true;
+    bool isOver;
     private void Start()
     {
+        isOver = false;
         int highScore = PlayerPrefs.GetInt("high_score");
         highScoreText.text = "High Score: " + highScore.ToString();
         birb_Script = GameObject.FindGameObjectWithTag("birb").GetComponent<birb_script>();
@@ -62,8 +64,9 @@ public class LogicManagerScript : MonoBehaviour
 
     public void restartGame()
     {
-        GameObject.FindGameObjectWithTag("spawner").GetComponent<PipeSpawnerScript>().Reset();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameObject.FindGameObjectWithTag("spawner").GetComponent<PipeSpawnerScript>().Reset();
+
     }
 
     public void loadTitleScreen()
@@ -73,12 +76,18 @@ public class LogicManagerScript : MonoBehaviour
 
     public void gameOver()
     {
+        isOver = true;
         if(playerScore > PlayerPrefs.GetInt("high_score"))
         {
             PlayerPrefs.SetInt("high_score", playerScore);
             highScoreText.text = "High Score: " + playerScore;
         }
         gameOverScreen.SetActive(true);
+    }
+
+    public bool IsGameOver()
+    {
+        return isOver;
     }
 
 

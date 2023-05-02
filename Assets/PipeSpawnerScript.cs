@@ -7,7 +7,7 @@ public class PipeSpawnerScript : MonoBehaviour
     public GameObject cherry;
     public float heightOffset;
     public float spawnRate;
-    public float speedIncrease = 3;
+    public float speedIncrease;
     public float spawnRateDecrease = 0.5f;
     float oldSpawnRate;
     private float timer = 0;
@@ -19,6 +19,7 @@ public class PipeSpawnerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        timeElapsed = 0;
         oldSpeedX = pipeMoving_script.moveSpeedX;
         oldSpawnRate = spawnRate;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
@@ -28,9 +29,7 @@ public class PipeSpawnerScript : MonoBehaviour
     public void Reset()
     {
         spawnRate = 3;
-        timeElapsed = 0;
         lerpDuration = 10;
-        oldSpeedX = 0;
         pipeMoving_script.moveSpeedX = 5;
     }
 
@@ -38,20 +37,30 @@ public class PipeSpawnerScript : MonoBehaviour
     void Update()
     {
         //Increase speed when player score hits a threshold;
-        if (logic.IncreaseDifficultyOn())
+        if (logic.IncreaseDifficultyOn() && !logic.IsGameOver())
         {
             //Max difficulty
-            if (logic.getScore() == 50)
+            if (logic.getScore() >= 40)
             {
-                spawnRate = 1;
+                if(timeElapsed < lerpDuration)
+                {
+                    spawnRate = Mathf.Lerp(oldSpawnRate, 1, timeElapsed / lerpDuration);
+                    timeElapsed += Time.deltaTime;
+                }
+                else
+                {
+                    spawnRate = 1.5f;
+                    logic.setDifficulty(false);
+                }
+
             }
             else
             {
                 //:BUG: Spawn rate increases too much after a certain time
                 //:BUG: updates cherry speed
                 //:TODO: adjust difficulty after 30 points, custom shader in mario invicibility style
+                //:TODO: Delete pipeCherry, make spawner cherry
                 //:BEHAVIOR: Speed the pipes linearly on a 60 second scale until it reaches oldspeed + speedIncrease;
-                Debug.Log(pipeMoving_script.moveSpeedX);
                 if (timeElapsed < lerpDuration)
                 {
                     pipeMoving_script.moveSpeedX = Mathf.Lerp(oldSpeedX, oldSpeedX + speedIncrease, timeElapsed / lerpDuration);

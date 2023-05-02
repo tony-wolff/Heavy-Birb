@@ -878,7 +878,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myRigidBody: {fileID: 653378293}
+  echo: {fileID: 7611889705794228503, guid: 4f51bc0ba49bae842997b24dc17062c1, type: 3}
   flapStrength: 20
+  dashStrength: 15
+  delayDash: 1
   logic: {fileID: 628799701}
   birbAlive: 1
   mySprite: {fileID: 653378289}
@@ -6400,7 +6403,7 @@ GameObject:
   - component: {fileID: 1953927985}
   m_Layer: 0
   m_Name: Pipe Spawner
-  m_TagString: Untagged
+  m_TagString: spawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6420,8 +6423,10 @@ MonoBehaviour:
   pipe: {fileID: 4077471166844128918, guid: d80d59a87b3635b4db4a24c633f111d8, type: 3}
   pipeCherry: {fileID: 4077471166844128918, guid: 5628391be7461574fb68fd9e226fab75, type: 3}
   cherry: {fileID: 5241436244925229554, guid: 4bf0eeaaf92b0344787441a5c1dd678d, type: 3}
-  spawnRate: 3
   heightOffset: 10
+  spawnRate: 3
+  speedIncrease: 3
+  spawnRateDecrease: 1
 --- !u!4 &1953927986
 Transform:
   m_ObjectHideFlags: 0
