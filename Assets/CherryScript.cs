@@ -15,7 +15,7 @@ public class CherryScript : MonoBehaviour
 
     private void Update()
     {
-        //transform.position = transform.position + (Vector3.left * 5) * Time.deltaTime;
+        transform.position = transform.position + (Vector3.left * 5) * Time.deltaTime;
         if (transform.position.x < -45)
             Destroy(gameObject);
     }

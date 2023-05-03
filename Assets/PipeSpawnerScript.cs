@@ -3,14 +3,15 @@ using UnityEngine;
 public class PipeSpawnerScript : MonoBehaviour
 {
     public GameObject pipe;
-    public GameObject pipeCherry;
     public GameObject cherry;
     public float heightOffset;
     public float spawnRate;
     public float speedIncrease;
     public float spawnRateDecrease = 0.5f;
+    float cherrySpanwRate;
     float oldSpawnRate;
-    private float timer = 0;
+    private float timer;
+    private float timerCherry;
     float timeElapsed;
     float lerpDuration = 10;
     float oldSpeedX;
@@ -20,10 +21,20 @@ public class PipeSpawnerScript : MonoBehaviour
     void Start()
     {
         timeElapsed = 0;
+        timer = 0;
+        timerCherry = 0;
         oldSpeedX = pipeMoving_script.moveSpeedX;
         oldSpawnRate = spawnRate;
+        cherrySpanwRate = spawnRate * 1.5f;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
         SpawnPipe();
+        //If not legacy game, deactivate points when passing between pipes
+        if (!SceneScript.isLegacy)
+        {
+            Debug.Log(pipe.transform.GetChild(2).gameObject);
+            pipe.transform.GetChild(2).gameObject.SetActive(false);
+
+        }
     }
 
     public void Reset()
@@ -37,7 +48,7 @@ public class PipeSpawnerScript : MonoBehaviour
     void Update()
     {
         //Increase speed when player score hits a threshold;
-        if (logic.IncreaseDifficultyOn() && !logic.IsGameOver())
+        if (logic.IncreaseDifficultyOn() && !logic.IsGameOver() && !SceneScript.isLegacy)
         {
             //Max difficulty
             if (logic.getScore() >= 40)
@@ -94,6 +105,17 @@ public class PipeSpawnerScript : MonoBehaviour
             SpawnPipe();
             timer = 0;
         }
+
+        if (!SceneScript.isLegacy)
+        {
+            if (timerCherry < cherrySpanwRate)
+                timerCherry += Time.deltaTime;
+            else
+            {
+                SpawnCherry();
+                timerCherry = 0;
+            }
+        }
     }
 
     void SpawnPipe()
@@ -101,12 +123,14 @@ public class PipeSpawnerScript : MonoBehaviour
         float lowestPoint = transform.position.y - heightOffset;
         float highestpoint = transform.position.y + heightOffset;
         Vector3 randomHeight = new Vector3(transform.position.x, Random.Range(lowestPoint, highestpoint), 0);
+        Instantiate(pipe, randomHeight, transform.rotation);
+    }
 
-        if (SceneScript.isLegacy)
-            Instantiate(pipe, randomHeight, transform.rotation);
-        else
-        {
-            Instantiate(pipeCherry, randomHeight, transform.rotation);
-        }
+    void SpawnCherry()
+    {
+        float lowestPoint = transform.position.y - heightOffset;
+        float highestpoint = transform.position.y + heightOffset;
+        Vector3 randomHeight = new Vector3(transform.position.x, Random.Range(lowestPoint, highestpoint), 0);
+        Instantiate(cherry, randomHeight, transform.rotation);
     }
 }
