@@ -93,7 +93,6 @@ public class birb_script : MonoBehaviour
             GameObject e = Instantiate(echo, transform.position, transform.rotation);
             e.transform.localScale = transform.localScale;
             echoes.Add(e);
-            Debug.Log(elapsedTime);
             yield return new WaitForSeconds(0.05f);
             if (elapsedTime >= 0.5f)
             {

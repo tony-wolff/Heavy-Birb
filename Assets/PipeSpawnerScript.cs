@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PipeSpawnerScript : MonoBehaviour
@@ -31,7 +32,6 @@ public class PipeSpawnerScript : MonoBehaviour
         //If not legacy game, deactivate points when passing between pipes
         if (!SceneScript.isLegacy)
         {
-            Debug.Log(pipe.transform.GetChild(2).gameObject);
             pipe.transform.GetChild(2).gameObject.SetActive(false);
 
         }
@@ -67,29 +67,9 @@ public class PipeSpawnerScript : MonoBehaviour
             }
             else
             {
-                //:BUG: Spawn rate increases too much after a certain time
-                //:BUG: updates cherry speed
                 //:TODO: adjust difficulty after 30 points, custom shader in mario invicibility style
-                //:TODO: Delete pipeCherry, make spawner cherry
-                //:BEHAVIOR: Speed the pipes linearly on a 60 second scale until it reaches oldspeed + speedIncrease;
-                if (timeElapsed < lerpDuration)
-                {
-                    pipeMoving_script.moveSpeedX = Mathf.Lerp(oldSpeedX, oldSpeedX + speedIncrease, timeElapsed / lerpDuration);
-                    spawnRate = Mathf.Lerp(oldSpawnRate, oldSpawnRate - spawnRateDecrease, timeElapsed / lerpDuration);
-                    pipeMoving_script.moveSpeedY = pipeMoving_script.moveSpeedX;
-                    timeElapsed += Time.deltaTime;
-                }
-                else
-                {
-                    //Set to their target value after a certain duration
-                    pipeMoving_script.moveSpeedX = oldSpeedX + speedIncrease;
-                    pipeMoving_script.moveSpeedY = oldSpeedX + speedIncrease;
-                    spawnRate = oldSpawnRate - spawnRateDecrease;
-                    //Update old value
-                    oldSpeedX += speedIncrease;
-                    oldSpawnRate -= spawnRateDecrease;
-                    logic.setDifficulty(false);
-                }
+                //:TODO: Speed the cherry accordingly
+                SpeedUp();
             }
         }
         else
@@ -106,7 +86,7 @@ public class PipeSpawnerScript : MonoBehaviour
             timer = 0;
         }
 
-        if (!SceneScript.isLegacy)
+        if (!SceneScript.isLegacy && logic.getScore() < 40)
         {
             if (timerCherry < cherrySpanwRate)
                 timerCherry += Time.deltaTime;
@@ -132,5 +112,35 @@ public class PipeSpawnerScript : MonoBehaviour
         float highestpoint = transform.position.y + heightOffset;
         Vector3 randomHeight = new Vector3(transform.position.x, Random.Range(lowestPoint, highestpoint), 0);
         Instantiate(cherry, randomHeight, transform.rotation);
+    }
+
+    private void SpeedUp()
+    {
+        float speedRateIncrease = (speedIncrease / oldSpeedX);
+        float spawnDecrease = oldSpawnRate * speedRateIncrease;
+        float cherrySpeedIncrease = CherryScript.oldSpeed * speedRateIncrease;
+        Debug.Log(timeElapsed);
+        if(timeElapsed < lerpDuration)
+        {
+            float percentage = timeElapsed / lerpDuration;
+            pipeMoving_script.moveSpeedX = Mathf.Lerp(oldSpeedX, oldSpeedX + speedIncrease, percentage);
+            spawnRate = Mathf.Lerp(oldSpawnRate, oldSpawnRate - spawnDecrease, percentage);
+            CherryScript.speed = Mathf.Lerp(CherryScript.oldSpeed, CherryScript.oldSpeed + cherrySpeedIncrease, percentage);
+            pipeMoving_script.moveSpeedY = pipeMoving_script.moveSpeedX;
+            timeElapsed += Time.deltaTime;
+        }
+        else
+        {
+            //Set to their target value after a certain duration
+            pipeMoving_script.moveSpeedX = oldSpeedX + speedIncrease;
+            pipeMoving_script.moveSpeedY = oldSpeedX + speedIncrease;
+            CherryScript.speed = CherryScript.oldSpeed + cherrySpeedIncrease;
+            spawnRate = oldSpawnRate - spawnDecrease;
+            //Update old value
+            oldSpeedX += speedIncrease;
+            oldSpawnRate -= spawnDecrease;
+            CherryScript.oldSpeed += cherrySpeedIncrease;
+            logic.setDifficulty(false);
+        }
     }
 }

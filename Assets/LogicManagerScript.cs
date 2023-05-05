@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class LogicManagerScript : MonoBehaviour
 {
-    private int playerScore = 40;
+    private int playerScore = 10;
     private bool increaseDifficulty = false;
+    // Level (player points) at which difficulty will be increased;
+    public List<int>difficultyLevels;
     public Text scoreText;
     public Text highScoreText;
     public GameObject gameOverScreen;
@@ -93,8 +95,15 @@ public class LogicManagerScript : MonoBehaviour
 
     void AdjustDifficulty()
     {
-        if(getScore() == 10 || getScore() == 20 || getScore() == 30 || getScore() == 40)
-            increaseDifficulty = true;
+        //BUG HERE
+        for(int i=difficultyLevels.Count - 1; i>=0; i--)
+        {
+            if(difficultyLevels[i] == getScore())
+            {
+                difficultyLevels.RemoveAt(i);
+                increaseDifficulty = true;
+            }
+        }
     }
 
     public void setDifficulty(bool d)
