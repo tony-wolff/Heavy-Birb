@@ -19,25 +19,25 @@ public class birb_script : MonoBehaviour
     private Camera cam;
     public SpriteRenderer mySprite;
     private Animator m_Animator;
-    private float maxSize = 1.5f;
+    private float maxSize = 1.2f;
+    private bool isInvicible = false;
+
+    private Vector3 originalSize;
     // Start is called before the first frame update
     void Start()
     {
         if(!SceneScript.isLegacy)
         {
             myRigidBody.gravityScale = 4;
-            DecreaseBirbSize();
         }
         cam = Camera.main;
         m_Animator = gameObject.GetComponentInChildren<Animator>();
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
         timer = delayDash;
         echoes = new List<GameObject>();
-    }
-
-    private void DecreaseBirbSize()
-    {
-        transform.localScale /= 2;
+        gameObject.transform.localScale /= 2;
+        originalSize = gameObject.transform.localScale;
+        StartCoroutine(DecreaseBirbSize());
     }
 
     //Game Over condition
@@ -56,7 +56,7 @@ public class birb_script : MonoBehaviour
         {
             Vector3 fatnessToAdd = new Vector3(0.05f, 0.05f, 0);
             transform.localScale += fatnessToAdd;
-            myRigidBody.gravityScale += 0.05f;
+            myRigidBody.gravityScale += 0.2f;
         }
     }
 
@@ -69,11 +69,18 @@ public class birb_script : MonoBehaviour
             birbAlive = false;
         }
 
+        if(logic.getScore() == 10 && !SceneScript.isLegacy){
+            gameObject.GetComponent<Renderer>().material.SetFloat("_Toggle", 1);
+            transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("_Toggle", 1);
+            isInvicible=true;
+        }
+
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)) && birbAlive)
         {
             myRigidBody.velocity = Vector2.up * flapStrength;
             m_Animator.SetTrigger("Flapping");
         }
+
 
         if(Input.GetKeyDown(KeyCode.RightArrow) && birbAlive && timer >= delayDash)
         {
@@ -106,9 +113,23 @@ public class birb_script : MonoBehaviour
         }
     }
 
+    public IEnumerator DecreaseBirbSize(){
+        while(true){
+            if(gameObject.transform.localScale.x > originalSize.x)
+            {
+                gameObject.transform.localScale -= new Vector3(0.001f, 0.001f, 0);
+                myRigidBody.gravityScale -= 0.004f;
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //logic.gameOver();
-        //birbAlive = false;
+        if(!isInvicible){
+            logic.gameOver();
+            birbAlive = false;
+        }
     }
 }

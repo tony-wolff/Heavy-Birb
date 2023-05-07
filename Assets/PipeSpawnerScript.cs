@@ -8,7 +8,7 @@ public class PipeSpawnerScript : MonoBehaviour
     public float heightOffset;
     public float spawnRate;
     public float speedIncrease;
-    public float spawnRateDecrease = 0.5f;
+    public float CherrySpeed;
     float cherrySpanwRate;
     float oldSpawnRate;
     private float timer;
@@ -27,14 +27,16 @@ public class PipeSpawnerScript : MonoBehaviour
         oldSpeedX = pipeMoving_script.moveSpeedX;
         oldSpawnRate = spawnRate;
         cherrySpanwRate = spawnRate * 1.5f;
+        CherryScript.speed = CherrySpeed;
+        CherryScript.oldSpeed = CherrySpeed;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
-        SpawnPipe();
         //If not legacy game, deactivate points when passing between pipes
         if (!SceneScript.isLegacy)
-        {
             pipe.transform.GetChild(2).gameObject.SetActive(false);
+        else
+            pipe.transform.GetChild(2).gameObject.SetActive(true);
+        SpawnPipe();
 
-        }
     }
 
     public void Reset()
@@ -55,29 +57,23 @@ public class PipeSpawnerScript : MonoBehaviour
             {
                 if(timeElapsed < lerpDuration)
                 {
-                    spawnRate = Mathf.Lerp(oldSpawnRate, 1, timeElapsed / lerpDuration);
+                    spawnRate = Mathf.Lerp(oldSpawnRate, 5/11f, timeElapsed / lerpDuration);
                     timeElapsed += Time.deltaTime;
                 }
                 else
                 {
-                    spawnRate = 1.5f;
+                    spawnRate = 5/11f;
                     logic.setDifficulty(false);
                 }
 
             }
             else
             {
-                //:TODO: adjust difficulty after 30 points, custom shader in mario invicibility style
-                //:TODO: Speed the cherry accordingly
+                //:TODO: adjust difficulty after 30 points
+                //:TODO: custom shader in mario invicibility style
                 SpeedUp();
             }
         }
-        else
-        {
-            timeElapsed = 0;
-        }
-
-
         if (timer < spawnRate)
             timer += Time.deltaTime;
         else
@@ -116,18 +112,18 @@ public class PipeSpawnerScript : MonoBehaviour
 
     private void SpeedUp()
     {
-        float speedRateIncrease = (speedIncrease / oldSpeedX);
-        float spawnDecrease = oldSpawnRate * speedRateIncrease;
-        float cherrySpeedIncrease = CherryScript.oldSpeed * speedRateIncrease;
-        Debug.Log(timeElapsed);
+        
+        float newSpawnRate = oldSpawnRate*0.8f;
+        float cherrySpeedIncrease = ValueToAdd(CherryScript.oldSpeed);
         if(timeElapsed < lerpDuration)
         {
             float percentage = timeElapsed / lerpDuration;
             pipeMoving_script.moveSpeedX = Mathf.Lerp(oldSpeedX, oldSpeedX + speedIncrease, percentage);
-            spawnRate = Mathf.Lerp(oldSpawnRate, oldSpawnRate - spawnDecrease, percentage);
+            spawnRate = Mathf.Lerp(oldSpawnRate, newSpawnRate, percentage);
             CherryScript.speed = Mathf.Lerp(CherryScript.oldSpeed, CherryScript.oldSpeed + cherrySpeedIncrease, percentage);
             pipeMoving_script.moveSpeedY = pipeMoving_script.moveSpeedX;
             timeElapsed += Time.deltaTime;
+            Debug.Log("spawn rate: " + spawnRate);
         }
         else
         {
@@ -135,12 +131,21 @@ public class PipeSpawnerScript : MonoBehaviour
             pipeMoving_script.moveSpeedX = oldSpeedX + speedIncrease;
             pipeMoving_script.moveSpeedY = oldSpeedX + speedIncrease;
             CherryScript.speed = CherryScript.oldSpeed + cherrySpeedIncrease;
-            spawnRate = oldSpawnRate - spawnDecrease;
             //Update old value
             oldSpeedX += speedIncrease;
-            oldSpawnRate -= spawnDecrease;
+            oldSpawnRate = newSpawnRate;
             CherryScript.oldSpeed += cherrySpeedIncrease;
+            cherrySpanwRate = spawnRate * 1.5f;
             logic.setDifficulty(false);
+            timeElapsed=0;
         }
+    }
+
+    float ValueToAdd(float speedToUpdate)
+    {
+        //The ratio between new & old speed = %
+        float newSpeedRatio = (speedIncrease / oldSpeedX);
+
+        return newSpeedRatio*speedToUpdate; 
     }
 }

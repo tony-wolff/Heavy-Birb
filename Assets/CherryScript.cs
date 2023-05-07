@@ -6,14 +6,13 @@ public class CherryScript : MonoBehaviour
 {
     // Script to move cherry along with the pipes
     // Allows player to pick cherry
-    public LogicManagerScript logic;
+    LogicManagerScript logic;
+    //Speed is referenced in PipeSpawnerScript
     public static float speed;
     public static float oldSpeed;
     // Start is called before the first frame update
     void Start()
     {
-        speed = 5;
-        oldSpeed = speed;
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicManagerScript>();
     }
 

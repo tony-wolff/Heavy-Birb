@@ -6,12 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class LogicManagerScript : MonoBehaviour
 {
-    private int playerScore = 10;
+    private int playerScore = 9;
     private bool increaseDifficulty = false;
     // Level (player points) at which difficulty will be increased;
     public List<int>difficultyLevels;
     public Text scoreText;
     public Text highScoreText;
+    public Text highScorelegacy;
     public GameObject gameOverScreen;
     public AudioSource points_audio;
     birb_script birb_Script;
@@ -20,8 +21,17 @@ public class LogicManagerScript : MonoBehaviour
     private void Start()
     {
         isOver = false;
-        int highScore = PlayerPrefs.GetInt("high_score");
-        highScoreText.text = "High Score: " + highScore.ToString();
+        int highScore=0;
+        if(SceneScript.isLegacy)
+        {
+            highScore = PlayerPrefs.GetInt("high_score_legacy");
+            highScorelegacy.text = "High Score: " + highScore.ToString();
+        }
+        else
+        {
+            highScore = PlayerPrefs.GetInt("high_score");
+            highScoreText.text = "High Score: " + highScore.ToString();
+        }
         birb_Script = GameObject.FindGameObjectWithTag("birb").GetComponent<birb_script>();
         Time.timeScale = 0;
     }
@@ -79,10 +89,20 @@ public class LogicManagerScript : MonoBehaviour
     public void gameOver()
     {
         isOver = true;
-        if(playerScore > PlayerPrefs.GetInt("high_score"))
+        if(SceneScript.isLegacy)
         {
-            PlayerPrefs.SetInt("high_score", playerScore);
-            highScoreText.text = "High Score: " + playerScore;
+            if(playerScore > PlayerPrefs.GetInt("high_score_legacy")){
+                PlayerPrefs.SetInt("high_score_legacy", playerScore);
+                highScorelegacy.text = "High Score: " + playerScore;
+            }
+        }
+        else
+        {
+            if(playerScore > PlayerPrefs.GetInt("high_score"))
+            {
+                PlayerPrefs.SetInt("high_score", playerScore);
+                highScoreText.text = "High Score: " + playerScore;
+            }
         }
         gameOverScreen.SetActive(true);
     }

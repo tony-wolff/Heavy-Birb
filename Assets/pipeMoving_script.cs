@@ -48,8 +48,8 @@ public class pipeMoving_script : MonoBehaviour
         if (cam.WorldToViewportPoint(transform.position).y >=1)
             up = false;
         if (up)
-            transform.Translate(transform.up * Time.deltaTime * moveSpeedY);
+            transform.Translate(Vector3.up * Time.deltaTime * moveSpeedY);
         else
-            transform.Translate(-transform.up * Time.deltaTime * moveSpeedY);
+            transform.Translate(-Vector3.up * Time.deltaTime * moveSpeedY);
     }
 }
