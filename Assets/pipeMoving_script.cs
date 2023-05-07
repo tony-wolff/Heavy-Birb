@@ -23,7 +23,7 @@ public class pipeMoving_script : MonoBehaviour
         else up = false;
     }
 
-    private void Reset()
+    public static void Reset()
     {
         moveSpeedX = 5;
         moveSpeedY = 5;

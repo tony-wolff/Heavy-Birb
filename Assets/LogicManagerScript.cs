@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using TMPro;
 
 public class LogicManagerScript : MonoBehaviour
 {
-    private int playerScore = 9;
+    private int playerScore = 0;
     private bool increaseDifficulty = false;
     // Level (player points) at which difficulty will be increased;
     public List<int>difficultyLevels;
@@ -18,8 +20,11 @@ public class LogicManagerScript : MonoBehaviour
     birb_script birb_Script;
     bool pauseBeforeStart = true;
     bool isOver;
+
+    GameObject msgBar;
     private void Start()
     {
+        ResetAll();
         isOver = false;
         int highScore=0;
         if(SceneScript.isLegacy)
@@ -34,6 +39,7 @@ public class LogicManagerScript : MonoBehaviour
         }
         birb_Script = GameObject.FindGameObjectWithTag("birb").GetComponent<birb_script>();
         Time.timeScale = 0;
+        msgBar =  GameObject.FindGameObjectWithTag("messageBar");
     }
 
     private void Update()
@@ -44,12 +50,11 @@ public class LogicManagerScript : MonoBehaviour
             {
                 pauseBeforeStart = false;
                 Time.timeScale = 1;
-                GameObject.FindGameObjectWithTag("spacebarimage").SetActive(false);
+                msgBar.SetActive(false);
             }
         }
-        else
-        {
-            AdjustDifficulty();
+        if(getScore() >= 20 && Input.GetKeyDown(KeyCode.RightArrow)){
+            msgBar.SetActive(false);
         }
 
     }
@@ -63,6 +68,12 @@ public class LogicManagerScript : MonoBehaviour
             playerScore += scoreToAdd;
             scoreText.text = playerScore.ToString();
             points_audio.Play();
+            AdjustDifficulty();
+            if(getScore() == 20){
+            TMP_Text t = msgBar.transform.GetChild(0).GetComponent<TMP_Text>();
+            t.text = "Press right arrow to dash";
+            msgBar.SetActive(true);
+            }
             if (!SceneScript.isLegacy)
                 birb_Script.IncreaseBirbSize();
         }
@@ -77,8 +88,11 @@ public class LogicManagerScript : MonoBehaviour
     public void restartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        GameObject.FindGameObjectWithTag("spawner").GetComponent<PipeSpawnerScript>().Reset();
+        ResetAll();
+    }
 
+    public void ResetAll(){
+        GameObject.FindGameObjectWithTag("spawner").GetComponent<PipeSpawnerScript>().Reset();
     }
 
     public void loadTitleScreen()

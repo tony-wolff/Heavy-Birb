@@ -19,7 +19,7 @@ public class birb_script : MonoBehaviour
     private Camera cam;
     public SpriteRenderer mySprite;
     private Animator m_Animator;
-    private float maxSize = 1.2f;
+    private float maxSize = 1;
     private bool isInvicible = false;
 
     private Vector3 originalSize;
@@ -58,6 +58,7 @@ public class birb_script : MonoBehaviour
             transform.localScale += fatnessToAdd;
             myRigidBody.gravityScale += 0.2f;
         }
+        Debug.Log(transform.localScale);
     }
 
     // Update is called once per frames
@@ -69,7 +70,7 @@ public class birb_script : MonoBehaviour
             birbAlive = false;
         }
 
-        if(logic.getScore() == 10 && !SceneScript.isLegacy){
+        if(logic.getScore() == 40 && !SceneScript.isLegacy){
             gameObject.GetComponent<Renderer>().material.SetFloat("_Toggle", 1);
             transform.GetChild(0).GetComponent<Renderer>().material.SetFloat("_Toggle", 1);
             isInvicible=true;

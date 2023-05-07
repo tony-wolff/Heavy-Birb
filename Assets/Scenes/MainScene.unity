@@ -5996,8 +5996,8 @@ GameObject:
   - component: {fileID: 850485263}
   - component: {fileID: 850485262}
   m_Layer: 5
-  m_Name: spaceBarImage
-  m_TagString: spacebarimage
+  m_Name: messageBar
+  m_TagString: messageBar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

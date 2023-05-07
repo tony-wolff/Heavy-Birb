@@ -14,7 +14,7 @@ public class SceneScript : MonoBehaviour
             isLegacy = true;
         else
             isLegacy = false;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("MainScene");
     }
 
     public void QuitGame()

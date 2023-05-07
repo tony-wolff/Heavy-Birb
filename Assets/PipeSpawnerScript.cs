@@ -43,7 +43,7 @@ public class PipeSpawnerScript : MonoBehaviour
     {
         spawnRate = 3;
         lerpDuration = 10;
-        pipeMoving_script.moveSpeedX = 5;
+        pipeMoving_script.Reset();
     }
 
     // Update is called once per frame
@@ -69,8 +69,6 @@ public class PipeSpawnerScript : MonoBehaviour
             }
             else
             {
-                //:TODO: adjust difficulty after 30 points
-                //:TODO: custom shader in mario invicibility style
                 SpeedUp();
             }
         }
@@ -123,7 +121,6 @@ public class PipeSpawnerScript : MonoBehaviour
             CherryScript.speed = Mathf.Lerp(CherryScript.oldSpeed, CherryScript.oldSpeed + cherrySpeedIncrease, percentage);
             pipeMoving_script.moveSpeedY = pipeMoving_script.moveSpeedX;
             timeElapsed += Time.deltaTime;
-            Debug.Log("spawn rate: " + spawnRate);
         }
         else
         {
