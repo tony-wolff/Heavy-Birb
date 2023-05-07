@@ -83,7 +83,7 @@ public class birb_script : MonoBehaviour
         }
 
 
-        if(Input.GetKeyDown(KeyCode.RightArrow) && birbAlive && timer >= delayDash)
+        if(Input.GetKeyDown(KeyCode.RightArrow) && birbAlive && timer >= delayDash && logic.getScore() >= 20)
         {
             elapsedTime = 0;
             StartCoroutine(Echo());
